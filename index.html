@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a4d3c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="দুআ ও জিকির">
+  <title>দুআ ও জিকির | Dua & Zikr</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/192.png">
+  <link rel="icon" href="icons/192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Soft decorative background -->
+  <div class="bg-decoration">
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+    <div class="bg-circle bg-circle-3"></div>
+    <div class="bg-pattern"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">🕌</span>
+      <div class="logo-text">
+        <h1 data-i18n="app_title">দুআ ও জিকির</h1>
+        <p class="logo-sub" data-i18n="app_subtitle">প্রতিদিনের আমল</p>
+      </div>
+    </div>
+
+    <div class="lang-switch">
+      <button id="langBn" class="active">বাংলা</button>
+      <button id="langEn">EN</button>
+    </div>
+  </header>
+
+  <!-- Install App Button -->
+  <button id="installBtn" class="install-btn" style="display:none;">
+    📲 <span data-i18n="install_app">হোম স্ক্রিনে যোগ করুন</span>
+  </button>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" id="tabDua" data-tab="dua">
+      <span class="tab-icon">📖</span>
+      <span data-i18n="tab_dua">দুআ</span>
+    </button>
+    <button class="tab-btn" id="tabZikr" data-tab="zikr">
+      <span class="tab-icon">🤲</span>
+      <span data-i18n="tab_zikr">জিকির</span>
+    </button>
+  </nav>
+
+  <main class="container">
+
+    <!-- ============ DUA SECTION ============ -->
+    <section id="sectionDua" class="section active">
+
+      <div class="date-badge">
+        <span class="date-icon">📅</span>
+        <span id="todayDate"></span>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="duaStreak">0</div>
+          <div class="stat-label" data-i18n="streak">স্ট্রিক</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">📖</div>
+          <div class="stat-value" id="duaTodayCount">0</div>
+          <div class="stat-label" data-i18n="today_count">আজ পড়া</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">✨</div>
+          <div class="stat-value" id="duaTotalCount">0</div>
+          <div class="stat-label" data-i18n="total_count">মোট পড়া</div>
+        </div>
+      </div>
+
+      <!-- সব দুআর লিস্ট -->
+      <div id="duaList" class="dua-list"></div>
+
+    </section>
+
+    <!-- ============ ZIKR SECTION ============ -->
+    <section id="sectionZikr" class="section">
+
+      <!-- Zikr Summary Card -->
+      <div class="zikr-summary">
+        <div class="summary-glow"></div>
+
+        <div class="summary-header">
+          <div>
+            <span class="summary-label" data-i18n="total_tasbih">মোট তাসবিহ</span>
+            <div class="summary-value" id="totalTasbih">0</div>
+          </div>
+          <div class="summary-badge">🤲</div>
+        </div>
+
+        <div class="summary-rows"><div class="summary-row">
+            <span>📅 <span data-i18n="today_total">আজকের মোট</span></span>
+            <strong id="todayTotalTasbih">0</strong>
+          </div>
+          <div class="summary-row">
+            <span>🔥 <span data-i18n="streak">স্ট্রিক</span></span>
+            <strong id="zikrStreak">0</strong>
+          </div>
+        </div>
+
+        <div class="summary-actions">
+          <button class="btn-sm" id="resetZikrBtn">
+            <span data-i18n="reset_today">🔄 আজকের রিসেট</span>
+          </button>
+          <button class="btn-sm btn-danger" id="clearAllBtn">
+            <span data-i18n="clear_all">🗑 সব মুছুন</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Zikr List -->
+      <div id="zikrList" class="zikr-list"></div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>🕌 <span data-i18n="footer_text">দুআ ও জিকির © ২০২৫</span></p>
+    <p class="footer-sub" data-i18n="footer_sub">সব দুআ সহীহ হাদিস থেকে সংকলিত</p>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
