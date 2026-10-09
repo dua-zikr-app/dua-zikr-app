@@ -1,12 +1,16 @@
 {
   "app_title": "Dua & Zikr",
+  "app_subtitle": "Daily Actions",
   "install_app": "Add to Home Screen",
   "tab_dua": "Dua",
   "tab_zikr": "Zikr",
+  "tab_prayer": "Prayer",
+  "tab_qibla": "Qibla",
   "badge_dua": "Dua",
-  "streak": "Streak 🔥",
-  "today_count": "Today",
-  "total_count": "Total",
+  "meaning_label": "Meaning",
+  "streak": "Streak",
+  "today_count": "Read Today",
+  "total_count": "Total Readings",
   "times_read": "times read",
   "count_btn": "Read Again",
   "mark_complete": "Mark as Read ✓",
@@ -27,6 +31,11 @@
   "times": "times",
   "target_done": "🎉 Target completed!",
   "count_plus": "Alhamdulillah",
-  "footer_text": "Dua & Zikr © 2026",
-  "share_text": "Check out Dua & Zikr:"
+  "footer_text": "Dua & Zikr © 2025",
+  "footer_sub": "All duas compiled from authentic hadith",
+  "share_text": "Check out Dua & Zikr:",
+  "prayer_title": "Prayer Times",
+  "refresh": "Refresh",
+  "qibla_title": "Qibla Direction",
+  "start_compass": "Start Compass"
 }

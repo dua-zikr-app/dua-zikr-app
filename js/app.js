@@ -1,12 +1,12 @@
-/* app.js — দুআ ও জিকির (সম্পূর্ণ) */
+/* ============================================================
+   app.js — দুআ, জিকির, নামাজ, কিবলা
+   ============================================================ */
 
 var allDuas = [];
-var currentLang = "bn";
 var installPromptEvent = null;
 
-/* জিকির লিস্ট */
+/* ============ জিকির লিস্ট ============ */
 var ZIKR_LIST = [
-  /* === ১-৮: মূল ৮টা === */
   { id: "subhanallah", arabic: "سُبْحَانَ اللَّهِ", bn: "সুবহানাল্লাহ", en: "SubhanAllah", target: 33 },
   { id: "alhamdulillah", arabic: "الْحَمْدُ لِلَّهِ", bn: "আলহামদুলিল্লাহ", en: "Alhamdulillah", target: 33 },
   { id: "allahuakbar", arabic: "اللَّهُ أَكْبَرُ", bn: "আল্লাহু আকবার", en: "Allahu Akbar", target: 34 },
@@ -14,29 +14,10 @@ var ZIKR_LIST = [
   { id: "astaghfirullah", arabic: "أَسْتَغْفِرُ اللَّهَ", bn: "আস্তাগফিরুল্লাহ", en: "Astaghfirullah", target: 100 },
   { id: "salawat", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", bn: "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদ", en: "Allahumma salli ala Muhammad", target: 100 },
   { id: "subhanwabihamdihi", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", bn: "সুবহানাল্লাহি ওয়া বিহামদিহি", en: "SubhanAllahi wa bihamdihi", target: 100 },
-  { id: "lahawla", arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", bn: "লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ", en: "La hawla wa la quwwata illa billah", target: 100 },
-
-  /* === ৯-২৮: নতুন ২০টা === */
-  { id: "subhanwabihamdihi_azeem", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ سُبْحَانَ اللَّهِ الْعَظِيمِ", bn: "সুবহানাল্লাহি ওয়া বিহামদিহি, সুবহানাল্লাহিল আযীম", en: "SubhanAllahi wa bihamdihi, SubhanAllahil Azeem", target: 33 },
-  { id: "lailaha_wahdahu", arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", bn: "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর", en: "La ilaha illallahu wahdahu la sharika lah, lahul mulku wa lahul hamdu wa huwa ala kulli shayin qadir", target: 100 },
-  { id: "istighfar_100", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", bn: "আস্তাগফিরুল্লাহ ওয়া আতুবু ইলাইহি", en: "Astaghfirullaha wa atubu ilayh", target: 100 },
-  { id: "istighfar_azeem", arabic: "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ", bn: "আস্তাগফিরুল্লাহিল আযীম", en: "Astaghfirullahil Azeem", target: 100 },
-  { id: "durood_ibrahim", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ", bn: "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন ওয়া আলা আলে মুহাম্মাদ, কামা সাল্লাইতা আলা ইব্রাহীম", en: "Allahumma salli ala Muhammad wa ala ali Muhammad, kama sallayta ala Ibrahim", target: 100 },
-  { id: "ya_hayyu", arabic: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ", bn: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগীস", en: "Ya Hayyu Ya Qayyum birahmatika astagheeth", target: 100 },
-  { id: "yunus_dua", arabic: "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ", bn: "লা ইলাহা ইল্লা আনতা সুবহানাকা ইন্নি কুনতু মিনাজ জালিমীন", en: "La ilaha illa anta subhanaka inni kuntu minaz zalimin", target: 100 },
-  { id: "hasbunallah", arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", bn: "হাসবুনাল্লাহু ওয়া নি'মাল ওয়াকীল", en: "Hasbunallahu wa ni'mal wakeel", target: 100 },
-  { id: "bismillah_protect", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", bn: "বিসমিল্লাহিল্লাযী লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়া লা ফিস সামা, ওয়া হুয়াস সামিউল আলীম", en: "Bismillahillazi la yadurru ma'asmihi shayun fil ardi wa la fis sama, wa huwas sami'ul aleem", target: 3 },
-  { id: "subhan_adada", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ وَرِضَا نَفْسِهِ وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ", bn: "সুবহানাল্লাহি ওয়া বিহামদিহি, আদাদা খালকিহি, ওয়া রিদা নাফসিহি, ওয়া যিনাতা আরশিহি, ওয়া মিদাদা কালিমাতিহি", en: "SubhanAllahi wa bihamdihi, adada khalqihi, wa rida nafsihi, wa zinata arshihi, wa midada kalimatihi", target: 3 },
-  { id: "jannah_dua", arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ", bn: "আল্লাহুম্মা ইন্নি আসআলুকাল জান্নাহ, ওয়া আউযু বিকা মিনান নার", en: "Allahumma inni as'alukal jannah, wa a'uzu bika minan nar", target: 100 },{ id: "baqiyat_salihat", arabic: "سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ", bn: "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি ওয়া লা ইলাহা ইল্লাল্লাহু ওয়াল্লাহু আকবার", en: "SubhanAllahi wal hamdulillahi wa la ilaha illallahu wallahu akbar", target: 100 },
-  { id: "kaffarat_majlis", arabic: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ", bn: "সুবহানাকা আল্লাহুম্মা ওয়া বিহামদিকা, আশহাদু আল লা ইলাহা ইল্লা আনতা, আস্তাগফিরুকা ওয়া আতুবু ইলাইকা", en: "Subhanaka Allahumma wa bihamdika, ash-hadu an la ilaha illa anta, astaghfiruka wa atubu ilayk", target: 1 },
-  { id: "lailaha_akbar", arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ", bn: "লা ইলাহা ইল্লাল্লাহু ওয়াল্লাহু আকবার", en: "La ilaha illallahu wallahu akbar", target: 100 },
-  { id: "sallim_nabi", arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ", bn: "আল্লাহুম্মা সাল্লি ওয়া সাল্লিম আলা নাবিয়্যিনা মুহাম্মাদ", en: "Allahumma salli wa sallim ala nabiyyina Muhammad", target: 100 },
-  { id: "rabbi_zidni", arabic: "رَبِّ زِدْنِي عِلْمًا", bn: "রাব্বি যিদনি ইলমা", en: "Rabbi zidni ilma", target: 100 },
-  { id: "rabbana_atina", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", bn: "রাব্বানা আতিনা ফিদ্দুনিয়া হাসানাতান, ওয়া ফিল আখিরাতি হাসানাতান, ওয়া কিনা আযাবান নার", en: "Rabbana atina fid dunya hasanah, wa fil akhirati hasanah, wa qina azaban nar", target: 100 },
-  { id: "ya_allah_names", arabic: "يَا اللَّهُ يَا رَحْمَنُ يَا رَحِيمُ", bn: "ইয়া আল্লাহ, ইয়া রাহমান, ইয়া রাহীম", en: "Ya Allah, Ya Rahman, Ya Rahim", target: 100 },
-  { id: "subhanallah_azeem", arabic: "سُبْحَانَ اللَّهِ الْعَظِيمِ", bn: "সুবহানাল্লাহিল আযীম", en: "SubhanAllahil Azeem", target: 33 }
+  { id: "lahawla", arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", bn: "লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ", en: "La hawla wa la quwwata illa billah", target: 100 }
 ];
 
+/* ============ তারিখ ============ */
 function todayKey() {
   var d = new Date();
   return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
@@ -54,90 +35,7 @@ function showTodayDate() {
   }
 }
 
-/* ============ দুআ লোড ও রেন্ডার ============ */
-function loadDuas() {
-  fetch("data/duas.json")
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      allDuas = data;
-      console.log("✅ " + allDuas.length + "টা দুআ লোড হয়েছে");
-      renderDuaList();
-    })
-    .catch(function (err) {
-      console.log("❌ দুআ লোড এরর:", err);
-    });
-}
-
-function renderDuaList() {
-  var container = document.getElementById("duaList");
-  if (!container) {
-    console.log("❌ duaList এলিমেন্ট নেই");
-    return;
-  }
-  if (!allDuas || allDuas.length === 0) {
-    container.innerHTML = "<p style='text-align:center;padding:2rem;'>কোনো দুআ নেই</p>";
-    return;
-  }
-
-  var html = "";
-  var i;
-
-  for (i = 0; i < allDuas.length; i++) {
-    var d = allDuas[i];
-    var catKey = currentLang === "bn" ? "category_bn" : "category_en";
-    var meanKey = currentLang === "bn" ? "meaning_bn" : "meaning_en";
-    var today = duaGetToday(d.id);
-
-    html += '<div class="dua-item">';
-
-    html += '<div class="card-header">';
-    html += '<span class="type-badge dua">দুআ ' + d.id + '</span>';
-    html += '<span class="dua-category">' + (d[catKey] || "") + '</span>';
-    html += '</div>';
-
-    html += '<p class="arabic-text" dir="rtl">' + (d.arabic || "") + '</p>';
-    html += '<p class="transliteration">' + (d.transliteration || "") + '</p>';
-
-    html += '<div class="meaning-box">';
-    html += '<p class="meaning">' + (d[meanKey] || "") + '</p>';
-    html += '</div>';
-
-    html += '<div class="reference-box">📚 ' + (d.reference || "") + '</div>';
-
-    html += '<div class="counter-row">';
-    html += '<div class="count-display">';
-    html += '<div class="count-number" id="dua-count-' + d.id + '">' + today + '</div>';
-    html += '<div class="count-label">বার পড়া হয়েছে</div>';
-    html += '</div>';
-    html += '<div style="display:flex;gap:0.4rem;">';
-    html += '<button class="btn-share-mini" data-share="' + d.id + '">📤</button>';
-    html += '<button class="btn-read" data-read="' + d.id + '">➕ পড়লাম</button>';
-    html += '</div>';
-    html += '</div>';
-
-    html += '</div>';
-  }
-
-  container.innerHTML = html;
-  console.log("✅ " + allDuas.length + "টা দুআ রেন্ডার হয়েছে");var readBtns = container.querySelectorAll("[data-read]");
-  for (i = 0; i < readBtns.length; i++) {
-    readBtns[i].addEventListener("click", function () {
-      var id = parseInt(this.getAttribute("data-read"), 10);
-      duaIncrement(id);
-      if (navigator.vibrate) navigator.vibrate(30);
-    });
-  }
-
-  var shareBtns = container.querySelectorAll("[data-share]");
-  for (i = 0; i < shareBtns.length; i++) {
-    shareBtns[i].addEventListener("click", function () {
-      var id = parseInt(this.getAttribute("data-share"), 10);
-      shareSingleDua(id);
-    });
-  }
-}
-
-/* ============ দুআ কাউন্টার ============ */
+/* ============ দুআ স্টোরেজ ============ */
 function getDuaData() {
   try {
     var raw = localStorage.getItem("dua_stats");
@@ -167,14 +65,14 @@ function duaIncrement(id) {
   data.dailyTotal[tk] = (data.dailyTotal[tk] || 0) + 1;
   saveDuaData(data);
 
-  var el = document.getElementById("dua-count-" + id);
-  if (el) {
-    el.textContent = duaGetToday(id);
-    el.classList.add("pop");
-    setTimeout(function () { el.classList.remove("pop"); }, 200);
+  var countEl = document.getElementById("dua-count-" + id);
+  if (countEl) {
+    countEl.textContent = duaGetToday(id);
+    countEl.classList.add("pop");
+    setTimeout(function () { countEl.classList.remove("pop"); }, 200);
   }
   updateDuaStats();
-  showToast("আলহামদুলিল্লাহ");
+  showToast(currentLang === "bn" ? "আলহামদুলিল্লাহ" : "Alhamdulillah");
 }
 
 function duaGetToday(id) {
@@ -191,6 +89,72 @@ function updateDuaStats() {
   if (a) a.textContent = getStreak();
   if (b) b.textContent = data.dailyTotal[todayKey()] || 0;
   if (c) c.textContent = data.globalTotal || 0;
+}
+
+/* ============ দুআ লোড ============ */
+function loadDuas() {
+  fetch("data/duas.json")
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      allDuas = data;
+      renderDuaList();
+    })
+    .catch(function (err) { console.log("dua load error:", err); });
+}function renderDuaList() {
+  var container = document.getElementById("duaList");
+  if (!container) return;
+  if (!allDuas || allDuas.length === 0) {
+    container.innerHTML = "<p style='text-align:center;padding:2rem;'>কোনো দুআ নেই</p>";
+    return;
+  }
+
+  var html = "";
+  for (var i = 0; i < allDuas.length; i++) {
+    var d = allDuas[i];
+    var catKey = currentLang === "bn" ? "category_bn" : "category_en";
+    var meanKey = currentLang === "bn" ? "meaning_bn" : "meaning_en";
+    var today = duaGetToday(d.id);
+
+    html += '<div class="dua-item">';
+    html += '<div class="card-header">';
+    html += '<span class="type-badge dua">দুআ ' + d.id + '</span>';
+    html += '<span class="dua-category">' + (d[catKey] || "") + '</span>';
+    html += '</div>';
+    html += '<p class="arabic-text" dir="rtl">' + (d.arabic || "") + '</p>';
+    html += '<p class="transliteration">' + (d.transliteration || "") + '</p>';
+    html += '<div class="meaning-box"><p class="meaning">' + (d[meanKey] || "") + '</p></div>';
+    html += '<div class="reference-box">📚 ' + (d.reference || "") + '</div>';
+    html += '<div class="counter-row">';
+    html += '<div class="count-display">';
+    html += '<div class="count-number" id="dua-count-' + d.id + '">' + today + '</div>';
+    html += '<div class="count-label">বার পড়া হয়েছে</div>';
+    html += '</div>';
+    html += '<div style="display:flex;gap:0.4rem;">';
+    html += '<button class="btn-share-mini" data-share="' + d.id + '">📤</button>';
+    html += '<button class="btn-read" data-read="' + d.id + '">➕ পড়লাম</button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+
+  var readBtns = container.querySelectorAll("[data-read]");
+  for (var j = 0; j < readBtns.length; j++) {
+    readBtns[j].addEventListener("click", function () {
+      var id = parseInt(this.getAttribute("data-read"), 10);
+      duaIncrement(id);
+      if (navigator.vibrate) navigator.vibrate(30);
+    });
+  }
+
+  var shareBtns = container.querySelectorAll("[data-share]");
+  for (var k = 0; k < shareBtns.length; k++) {
+    shareBtns[k].addEventListener("click", function () {
+      var id = parseInt(this.getAttribute("data-share"), 10);
+      shareSingleDua(id);
+    });
+  }
 }
 
 function shareSingleDua(id) {
@@ -210,7 +174,7 @@ function shareSingleDua(id) {
   }
 }
 
-/* ============ জিকির ============ */
+/* ============ জিকির স্টোরেজ ============ */
 function getZikrData() {
   try {
     var raw = localStorage.getItem("zikr_stats");
@@ -383,8 +347,7 @@ function resetTodayZikr() {
   var data = getZikrData();
   var tk = todayKey();
   data.dailyTotal[tk] = 0;
-  var id;
-  for (id in data.items) {
+  for (var id in data.items) {
     if (data.items[id].daily) data.items[id].daily[tk] = 0;
   }
   saveZikrData(data);
@@ -400,25 +363,24 @@ function clearAllZikr() {
 }
 
 /* ============ ট্যাব ============ */
-function switchTab(tab) {
-  var tabDua = document.getElementById("tabDua");
-  var tabZikr = document.getElementById("tabZikr");
-  var sectionDua = document.getElementById("sectionDua");
-  var sectionZikr = document.getElementById("sectionZikr");
-  if (!tabDua || !tabZikr) return;
+function switchTabFull(tab) {
+  var tabs = { dua: "tabDua", zikr: "tabZikr", prayer: "tabPrayer", qibla: "tabQibla" };
+  var sections = { dua: "sectionDua", zikr: "sectionZikr", prayer: "sectionPrayer", qibla: "sectionQibla" };
 
-  if (tab === "dua") {
-    tabDua.classList.add("active");
-    tabZikr.classList.remove("active");
-    if (sectionDua) sectionDua.classList.add("active");
-    if (sectionZikr) sectionZikr.classList.remove("active");
-  } else {
-    tabZikr.classList.add("active");
-    tabDua.classList.remove("active");
-    if (sectionZikr) sectionZikr.classList.add("active");
-    if (sectionDua) sectionDua.classList.remove("active");
-    zikrUpdateSummary();
+  for (var k in tabs) {
+    var b = document.getElementById(tabs[k]);
+    var s = document.getElementById(sections[k]);
+    if (b) b.classList.remove("active");
+    if (s) s.classList.remove("active");
   }
+
+  var activeBtn = document.getElementById(tabs[tab]);
+  var activeSec = document.getElementById(sections[tab]);
+  if (activeBtn) activeBtn.classList.add("active");
+  if (activeSec) activeSec.classList.add("active");
+
+  if (tab === "prayer") loadPrayerTimes();
+  if (tab === "qibla") loadQibla();
 }
 
 /* ============ টোস্ট ============ */
@@ -456,7 +418,191 @@ function setupInstall() {
   }
 }
 
-/* ============ ভাষা রিফ্রেশ ============ */
+/* ============ নামাজের সময় ============ */
+function getLocation() {
+  return new Promise(function (resolve) {
+    if (!navigator.geolocation) {
+      resolve({ lat: 23.8103, lng: 90.4125 });
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      function (pos) { resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
+      function () { resolve({ lat: 23.8103, lng: 90.4125 }); },
+      { timeout: 10000 }
+    );
+  });
+}
+
+function loadPrayerTimes() {
+  var container = document.getElementById("prayerTimes");
+  if (!container) return;
+  container.innerHTML = "<p style='text-align:center;padding:1rem'>লোড হচ্ছে...</p>";
+
+  getLocation().then(function (loc) {
+    var today = new Date();
+    var dateStr = today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+    var url = "https://api.aladhan.com/v1/timings/" + dateStr +
+      "?latitude=" + loc.lat + "&longitude=" + loc.lng + "&method=1";
+
+    fetch(url)
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.code !== 200) throw new Error("API error");
+        var t = data.data.timings;var hijri = data.data.date.hijri;
+        var hijriEl = document.getElementById("prayerHijriDate");
+        if (hijriEl) {
+          hijriEl.textContent = hijri.day + " " + hijri.month.en + " " + hijri.year + " হিজরি";
+        }
+
+        var locEl = document.getElementById("prayerLocation");
+        if (locEl) locEl.textContent = data.data.meta.timezone || "আপনার এলাকা";
+
+        var prayers = [
+          { bn: "ফজর", start: t.Fajr, end: t.Sunrise, endLabel: "সূর্যোদয়" },
+          { bn: "যোহর", start: t.Dhuhr, end: t.Asr, endLabel: "আসর" },
+          { bn: "আসর", start: t.Asr, end: t.Maghrib, endLabel: "মাগরিব" },
+          { bn: "মাগরিব", start: t.Maghrib, end: t.Isha, endLabel: "ইশা" },
+          { bn: "ইশা", start: t.Isha, end: t.Fajr, endLabel: "ফজর" }
+        ];
+
+        function format12(s) {
+          if (!s) return "--:--";
+          var p = s.split(":");
+          var h = parseInt(p[0], 10);
+          var ap = h >= 12 ? "PM" : "AM";
+          h = h % 12 || 12;
+          return h + ":" + p[1] + " " + ap;
+        }
+        function toMin(s) {
+          if (!s) return 0;
+          var p = s.split(":");
+          return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+        }
+
+        var now = new Date();
+        var curMin = now.getHours() * 60 + now.getMinutes();
+        var html = "";
+        var i;
+
+        for (i = 0; i < prayers.length; i++) {
+          var p = prayers[i];
+          var startMin = toMin(p.start);
+          var endMin = toMin(p.end);
+          var isCurrent = false;
+
+          if (p.bn === "ইশা") {
+            if (curMin >= startMin || curMin < endMin) isCurrent = true;
+          } else {
+            if (curMin >= startMin && curMin < endMin) isCurrent = true;
+          }
+
+          html += '<div class="prayer-time-item' + (isCurrent ? " current" : "") + '">';
+          html += '<div class="prayer-time-header">';
+          html += '<span class="prayer-time-name">🕌 ' + p.bn + '</span>';
+          if (isCurrent) html += '<span class="prayer-current-badge">এখন</span>';
+          html += '</div>';
+          html += '<div class="prayer-time-range">';
+          html += '<div class="prayer-range-item">';
+          html += '<span class="prayer-range-label">▶ শুরু</span>';
+          html += '<span class="prayer-range-time">' + format12(p.start) + '</span>';
+          html += '</div>';
+          html += '<div class="prayer-range-sep">—</div>';
+          html += '<div class="prayer-range-item">';
+          html += '<span class="prayer-range-label">◼ শেষ (' + p.endLabel + ')</span>';
+          html += '<span class="prayer-range-time">' + format12(p.end) + '</span>';
+          html += '</div>';
+          html += '</div>';
+          html += '</div>';
+        }
+
+        container.innerHTML = html;
+      })
+      .catch(function (err) {
+        console.log("Prayer error:", err);
+        container.innerHTML = "<p style='text-align:center;color:#c0392b;padding:1rem'>সময়সূচি লোড করা যায়নি</p>";
+      });
+  });
+}
+
+/* ============ কিবলা ============ */
+var qiblaBearing = 0;
+var deviceHeading = 0;
+var compassStarted = false;
+
+function calcQiblaBearing(lat, lng) {
+  var kLat = 21.4225, kLng = 39.8262;
+  var toRad = Math.PI / 180, toDeg = 180 / Math.PI;
+  var phi1 = lat * toRad, phi2 = kLat * toRad, dLng = (kLng - lng) * toRad;
+  var y = Math.sin(dLng) * Math.cos(phi2);
+  var x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(dLng);
+  return (Math.atan2(y, x) * toDeg + 360) % 360;
+}
+
+function calcDistance(lat, lng) {
+  var kLat = 21.4225, kLng = 39.8262, R = 6371, toRad = Math.PI / 180;
+  var dLat = (kLat - lat) * toRad, dLng = (kLng - lng) * toRad;
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat * toRad) * Math.cos(kLat * toRad) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(0);
+}function updateCompassArrow() {
+  var arrow = document.getElementById("compassArrow");
+  if (!arrow) return;
+  arrow.style.transform = "translate(-50%, -100%) rotate(" + (qiblaBearing - deviceHeading) + "deg)";
+}
+
+function onDeviceOrientation(event) {
+  var heading = null;
+  if (event.webkitCompassHeading !== undefined) heading = event.webkitCompassHeading;
+  else if (event.alpha !== null) heading = 360 - event.alpha;
+  if (heading !== null) {
+    deviceHeading = heading;
+    updateCompassArrow();
+    var hint = document.getElementById("compassHint");
+    if (hint) hint.textContent = "✅ কম্পাস চালু — ফোন ঘুরিয়ে কিবলা খুঁজুন";
+  }
+}
+
+function loadQibla() {
+  getLocation().then(function (loc) {
+    qiblaBearing = calcQiblaBearing(loc.lat, loc.lng);
+    var dist = calcDistance(loc.lat, loc.lng);
+    var textEl = document.getElementById("qiblaText");
+    var distEl = document.getElementById("qiblaDistance");
+    var marker = document.getElementById("qiblaMarker");
+    if (textEl) textEl.textContent = "কিবলার দিক: " + Math.round(qiblaBearing) + "°";
+    if (distEl) distEl.textContent = "কাবা শরীফ থেকে দূরত্ব: " + dist + " কিমি";
+    if (marker) marker.style.transform = "translate(-50%, -100%) rotate(" + qiblaBearing + "deg)";
+    updateCompassArrow();
+  });
+}
+
+function startCompass() {
+  if (compassStarted) return;
+  compassStarted = true;
+  var hint = document.getElementById("compassHint");
+
+  if (typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function") {
+    DeviceOrientationEvent.requestPermission()
+      .then(function (response) {
+        if (response === "granted") {
+          window.addEventListener("deviceorientation", onDeviceOrientation);
+          if (hint) hint.textContent = "✅ কম্পাস চালু হয়েছে";
+        } else {
+          if (hint) hint.textContent = "❌ কম্পাস অনুমতি দেওয়া হয়নি";
+        }
+      })
+      .catch(function () {});
+  } else if (typeof DeviceOrientationEvent !== "undefined") {
+    window.addEventListener("deviceorientation", onDeviceOrientation);
+    if (hint) hint.textContent = "✅ কম্পাস চালু হয়েছে";
+  } else {
+    if (hint) hint.textContent = "❌ আপনার ডিভাইসে কম্পাস নেই";
+  }
+}
+
+/* ============ রিফ্রেশ ============ */
 function refreshUI() {
   showTodayDate();
   renderDuaList();
@@ -467,31 +613,35 @@ function refreshUI() {
 
 /* ============ শুরু ============ */
 function startApp() {
-  currentLang = localStorage.getItem("lang") || "bn";
-
   showTodayDate();
   loadDuas();
   renderZikrList();
   updateDuaStats();
   zikrUpdateSummary();
 
-  if (typeof loadLang === "function") {
-    loadLang(currentLang);
-  }
+  if (typeof loadLang === "function") loadLang(currentLang);
 
   var tabDua = document.getElementById("tabDua");
   var tabZikr = document.getElementById("tabZikr");
-  if (tabDua) tabDua.onclick = function () { switchTab("dua"); };
-  if (tabZikr) tabZikr.onclick = function () { switchTab("zikr"); };
-
+  var tabPrayer = document.getElementById("tabPrayer");
+  var tabQibla = document.getElementById("tabQibla");
   var langBn = document.getElementById("langBn");
   var langEn = document.getElementById("langEn");
+  var resetBtn = document.getElementById("resetZikrBtn");
+  var clearBtn = document.getElementById("clearAllBtn");
+  var refreshBtn = document.getElementById("refreshPrayerBtn");
+  var compassBtn = document.getElementById("startCompassBtn");
+
+  if (tabDua) tabDua.onclick = function () { switchTabFull("dua"); };
+  if (tabZikr) tabZikr.onclick = function () { switchTabFull("zikr"); };
+  if (tabPrayer) tabPrayer.onclick = function () { switchTabFull("prayer"); };
+  if (tabQibla) tabQibla.onclick = function () { switchTabFull("qibla"); };
   if (langBn) langBn.onclick = function () { if (typeof loadLang === "function") loadLang("bn"); };
   if (langEn) langEn.onclick = function () { if (typeof loadLang === "function") loadLang("en"); };
-
-  var resetBtn = document.getElementById("resetZikrBtn");
-  if (resetBtn) resetBtn.onclick = resetTodayZikr;var clearBtn = document.getElementById("clearAllBtn");
+  if (resetBtn) resetBtn.onclick = resetTodayZikr;
   if (clearBtn) clearBtn.onclick = clearAllZikr;
+  if (refreshBtn) refreshBtn.onclick = loadPrayerTimes;
+  if (compassBtn) compassBtn.onclick = startCompass;
 
   setupInstall();
 }

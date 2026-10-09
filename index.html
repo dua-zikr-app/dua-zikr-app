@@ -59,6 +59,14 @@
       <span class="tab-icon">🤲</span>
       <span data-i18n="tab_zikr">জিকির</span>
     </button>
+    <button class="tab-btn" id="tabPrayer" data-tab="prayer">
+      <span class="tab-icon">🕌</span>
+      <span data-i18n="tab_prayer">নামাজ</span>
+    </button>
+    <button class="tab-btn" id="tabQibla" data-tab="qibla">
+      <span class="tab-icon">🧭</span>
+      <span data-i18n="tab_qibla">কিবলা</span>
+    </button>
   </nav>
 
   <main class="container">
@@ -97,7 +105,6 @@
     <!-- ============ ZIKR SECTION ============ -->
     <section id="sectionZikr" class="section">
 
-      <!-- Zikr Summary Card -->
       <div class="zikr-summary">
         <div class="summary-glow"></div>
 
@@ -107,9 +114,8 @@
             <div class="summary-value" id="totalTasbih">0</div>
           </div>
           <div class="summary-badge">🤲</div>
-        </div>
-
-        <div class="summary-rows"><div class="summary-row">
+        </div><div class="summary-rows">
+          <div class="summary-row">
             <span>📅 <span data-i18n="today_total">আজকের মোট</span></span>
             <strong id="todayTotalTasbih">0</strong>
           </div>
@@ -129,15 +135,60 @@
         </div>
       </div>
 
-      <!-- Zikr List -->
       <div id="zikrList" class="zikr-list"></div>
+
+    </section>
+
+    <!-- ============ PRAYER TIMES SECTION ============ -->
+    <section id="sectionPrayer" class="section">
+
+      <div class="prayer-header">
+        <h2>🕌 <span data-i18n="prayer_title">নামাজের সময়সূচি</span></h2>
+        <p id="prayerLocation">লোড হচ্ছে...</p>
+        <p id="prayerHijriDate"></p>
+      </div>
+
+      <div id="prayerTimes" class="prayer-times-list"></div>
+
+      <button id="refreshPrayerBtn" class="btn-refresh">
+        🔄 <span data-i18n="refresh">আপডেট করুন</span>
+      </button>
+
+    </section>
+
+    <!-- ============ QIBLA SECTION ============ -->
+    <section id="sectionQibla" class="section">
+
+      <div class="qibla-container">
+        <h2>🧭 <span data-i18n="qibla_title">কিবলার দিক</span></h2>
+
+        <div class="compass">
+          <div class="compass-ring"></div>
+          <div class="compass-n">N</div>
+          <div class="compass-e">E</div>
+          <div class="compass-s">S</div>
+          <div class="compass-w">W</div>
+          <div class="qibla-marker" id="qiblaMarker"></div>
+          <div class="compass-arrow" id="compassArrow"></div>
+        </div>
+
+        <p id="qiblaText">কিবলার দিক: --°</p>
+        <p id="qiblaDistance">দূরত্ব: -- কিমি</p>
+        <p class="compass-hint" id="compassHint">
+          ফোনটি সমতল করে ধরুন এবং কম্পাস চালু করুন
+        </p>
+
+        <button id="startCompassBtn" class="btn-compass">
+          🧭 <span data-i18n="start_compass">কম্পাস চালু করুন</span>
+        </button>
+      </div>
 
     </section>
 
   </main>
 
   <footer class="footer">
-    <p>🕌 <span data-i18n="footer_text">দুআ ও জিকির © ২০২৫</span></p>
+    <p>🕌 <span data-i18n="footer_text">দুআ ও জিকির © ২০২৬</span></p>
     <p class="footer-sub" data-i18n="footer_sub">সব দুআ সহীহ হাদিস থেকে সংকলিত</p>
   </footer>
 
