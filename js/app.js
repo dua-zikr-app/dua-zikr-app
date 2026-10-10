@@ -7,14 +7,177 @@ var installPromptEvent = null;
 
 /* ============ জিকির লিস্ট ============ */
 var ZIKR_LIST = [
-  { id: "subhanallah", arabic: "سُبْحَانَ اللَّهِ", bn: "সুবহানাল্লাহ", en: "SubhanAllah", target: 33 },
-  { id: "alhamdulillah", arabic: "الْحَمْدُ لِلَّهِ", bn: "আলহামদুলিল্লাহ", en: "Alhamdulillah", target: 33 },
-  { id: "allahuakbar", arabic: "اللَّهُ أَكْبَرُ", bn: "আল্লাহু আকবার", en: "Allahu Akbar", target: 34 },
-  { id: "lailaha", arabic: "لَا إِلَهَ إِلَّا اللَّهُ", bn: "লা ইলাহা ইল্লাল্লাহ", en: "La ilaha illallah", target: 100 },
-  { id: "astaghfirullah", arabic: "أَسْتَغْفِرُ اللَّهَ", bn: "আস্তাগফিরুল্লাহ", en: "Astaghfirullah", target: 100 },
-  { id: "salawat", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", bn: "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদ", en: "Allahumma salli ala Muhammad", target: 100 },
-  { id: "subhanwabihamdihi", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", bn: "সুবহানাল্লাহি ওয়া বিহামদিহি", en: "SubhanAllahi wa bihamdihi", target: 100 },
-  { id: "lahawla", arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", bn: "লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ", en: "La hawla wa la quwwata illa billah", target: 100 }
+  {
+    id: "subhanallah",
+    arabic: "سُبْحَانَ اللَّهِ",
+    bn: "সুবহানাল্লাহ",
+    en: "SubhanAllah",
+    meaning_bn: "আল্লাহ পবিত্র।",
+    meaning_en: "Glory be to Allah.",
+    target: 33
+  },
+  {
+    id: "alhamdulillah",
+    arabic: "الْحَمْدُ لِلَّهِ",
+    bn: "আলহামদুলিল্লাহ",
+    en: "Alhamdulillah",
+    meaning_bn: "সকল প্রশংসা আল্লাহর।",
+    meaning_en: "All praise is for Allah.",
+    target: 33
+  },
+  {
+    id: "allahuakbar",
+    arabic: "اللَّهُ أَكْبَرُ",
+    bn: "আল্লাহু আকবার",
+    en: "Allahu Akbar",
+    meaning_bn: "আল্লাহ সর্বশ্রেষ্ঠ।",
+    meaning_en: "Allah is the Greatest.",
+    target: 34
+  },
+  {
+    id: "lailaha",
+    arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ",
+    bn: "লা ইলাহা ইল্লাল্লাহ",
+    en: "La ilaha illallah",
+    meaning_bn: "আল্লাহ ছাড়া কোনো ইলাহ নেই।",
+    meaning_en: "There is no god but Allah.",
+    target: 100
+  },
+  {
+    id: "astaghfirullah",
+    arabic: "أَسْتَغْفِرُ اللَّهَ",
+    bn: "আস্তাগফিরুল্লাহ",
+    en: "Astaghfirullah",
+    meaning_bn: "আমি আল্লাহর কাছে ক্ষমা চাই।",
+    meaning_en: "I seek forgiveness from Allah.",
+    target: 100
+  },
+  {
+    id: "lahawla",
+    arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+    bn: "লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ",
+    en: "La hawla wa la quwwata illa billah",
+    meaning_bn: "আল্লাহর সাহায্য ছাড়া কোনো শক্তি-সামর্থ্য নেই।",
+    meaning_en: "There is no power or might except with Allah.",
+    target: 100
+  },
+  {
+    id: "subhanwabihamdihi",
+    arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+    bn: "সুবহানাল্লাহি ওয়া বিহামদিহি",
+    en: "SubhanAllahi wa bihamdihi",
+    meaning_bn: "আল্লাহ পবিত্র এবং সকল প্রশংসা তাঁরই।",
+    meaning_en: "Glory be to Allah and praise be to Him.",
+    target: 100
+  },
+  {
+    id: "subhanazeem",
+    arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ",
+    bn: "সুবহানাল্লাহি ওয়া বিহামদিহি, সুবহানাল্লাহিল আযীম",
+    en: "SubhanAllahi wa bihamdihi, SubhanAllahil Azeem",
+    meaning_bn: "আল্লাহ পবিত্র ও প্রশংসিত, আল্লাহ মহান ও পবিত্র।",
+    meaning_en: "Glory be to Allah and praise be to Him, glory be to Allah the Mighty.",
+    target: 33
+  },
+  {
+    id: "lailaha_wahdahu",
+    arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+    bn: "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর",
+    en: "La ilaha illallahu wahdahu la sharika lah, lahul mulku wa lahul hamdu wa huwa ala kulli shayin qadir",
+    meaning_bn: "আল্লাহ ছাড়া কোনো ইলাহ নেই, তিনি এক, তাঁর কোনো শরিক নেই, রাজত্ব ও প্রশংসা তাঁরই, তিনি সবকিছুর উপর ক্ষমতাবান।",
+    meaning_en: "There is no god but Allah, alone, without partner. His is the dominion and praise, and He is able to do all things.",
+    target: 100
+  },
+  {
+    id: "hasbunallah",
+    arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+    bn: "হাসবুনাল্লাহু ওয়া নি'মাল ওয়াকীল",
+    en: "Hasbunallahu wa ni'mal wakeel",
+    meaning_bn: "আল্লাহই আমাদের জন্য যথেষ্ট, তিনি উত্তম কর্মবিধায়ক।",
+    meaning_en: "Allah is sufficient for us, and He is the best Disposer of affairs.",
+    target: 100
+  },
+  {
+    id: "bismillah",
+    arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    bn: "বিসমিল্লাহির রাহমানির রাহীম",
+    en: "Bismillahir Rahmanir Rahim",
+    meaning_bn: "পরম করুণাময় ও অসীম দয়ালু আল্লাহর নামে।",
+    meaning_en: "In the name of Allah, the Most Gracious, the Most Merciful.",
+    target: 100
+  },
+  {
+   id: "salawat_full",
+    arabic: "اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
+    bn: "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন ওয়া আলা আলি মুহাম্মাদ",
+    en: "Allahumma salli ala Muhammad wa ala ali Muhammad",
+    meaning_bn: "হে আল্লাহ! মুহাম্মাদ (সা.) ও তাঁর পরিবারের উপর রহমত বর্ষণ করুন।",
+    meaning_en: "O Allah, send blessings upon Muhammad and upon the family of Muhammad.",
+    target: 100
+  },
+  {
+    id: "baqiyat",
+    arabic: "سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَٰهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ",
+    bn: "সুবহানাল্লাহি ওয়াল হামদুলিল্লাহি ওয়া লা ইলাহা ইল্লাল্লাহু ওয়াল্লাহু আকবার",
+    en: "SubhanAllahi wal hamdulillahi wa la ilaha illallahu wallahu akbar",
+    meaning_bn: "আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ ছাড়া কোনো ইলাহ নেই, আল্লাহ সর্বশ্রেষ্ঠ।",
+    meaning_en: "Glory be to Allah, praise be to Allah, there is no god but Allah, and Allah is the Greatest.",
+    target: 100
+  },
+  {
+    id: "yunus_dua",
+    arabic: "لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+    bn: "লা ইলাহা ইল্লা আনতা সুবহানাকা ইন্নি কুনতু মিনাজ জালিমীন",
+    en: "La ilaha illa anta subhanaka inni kuntu minaz zalimin",
+    meaning_bn: "আপনি ছাড়া কোনো ইলাহ নেই, আপনি পবিত্র, নিশ্চয়ই আমি জালিমদের অন্তর্ভুক্ত।",
+    meaning_en: "There is no god but You, glory be to You. Indeed, I have been of the wrongdoers.",
+    target: 100
+  },
+  {
+    id: "tawba_dua",
+    arabic: "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
+    bn: "রাব্বিগফির লি ওয়া তুব আলাইয়্যা ইন্নাকা আনতাত তাওয়াবুর রাহীম",
+    en: "Rabbighfir li wa tub alayya innaka antat tawwabur rahim",
+    meaning_bn: "হে আমার রব! আমাকে ক্ষমা করুন ও তাওবা কবুল করুন, নিশ্চয়ই আপনি তাওবা কবুলকারী ও দয়ালু।",
+    meaning_en: "My Lord, forgive me and accept my repentance. Indeed, You are the Accepter of repentance, the Merciful.",
+    target: 100
+  },
+  {
+    id: "jannah_dua",
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ",
+    bn: "আল্লাহুম্মা ইন্নি আসআলুকাল জান্নাহ, ওয়া আউযু বিকা মিনান নার",
+    en: "Allahumma inni as'alukal jannah, wa a'uzu bika minan nar",
+    meaning_bn: "হে আল্লাহ! আমি আপনার কাছে জান্নাত প্রার্থনা করছি এবং জাহান্নাম থেকে আশ্রয় চাই।",
+    meaning_en: "O Allah, I ask You for Paradise and seek refuge in You from the Fire.",
+    target: 100
+  },
+  {
+    id: "zikr_shukr",
+    arabic: "اللَّهُمَّ أَعِنِّي عَلَىٰ ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+    bn: "আল্লাহুম্মা আ'ইন্নি আলা যিকরিকা ওয়া শুকরিকা ওয়া হুসনি ইবাদাতিকা",
+    en: "Allahumma a'inni ala zikrika wa shukrika wa husni ibadatik",
+    meaning_bn: "হে আল্লাহ! আপনার যিকির, শোকর ও সুন্দর ইবাদতে আমাকে সাহায্য করুন।",
+    meaning_en: "O Allah, help me to remember You, to thank You, and to worship You well.",
+    target: 100
+  },
+  {
+    id: "ya_hayyu",
+    arabic: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ",
+    bn: "ইয়া হাইয়্যু ইয়া কাইয়্যুম বিরাহমাতিকা আস্তাগীস",
+    en: "Ya Hayyu Ya Qayyum birahmatika astagheeth",
+    meaning_bn: "হে চিরঞ্জীব! হে সর্বসত্তার ধারক! আপনার রহমতের মাধ্যমে আমি সাহায্য চাই।",
+    meaning_en: "O Ever-Living, O Sustainer, by Your mercy I seek help.",
+    target: 100
+  },
+  {
+    id: "kalima_tayyiba",
+    arabic: "لَا إِلَٰهَ إِلَّا اللَّهُ مُحَمَّدٌ رَسُولُ اللَّهِ",
+    bn: "লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ",
+    en: "La ilaha illallahu Muhammadur Rasulullah",
+    meaning_bn: "আল্লাহ ছাড়া কোনো ইলাহ নেই, মুহাম্মাদ (সা.) আল্লাহর রাসূল।",
+    meaning_en: "There is no god but Allah, and Muhammad is the Messenger of Allah.",
+    target: 100
+  }
 ];
 
 /* ============ তারিখ ============ */
